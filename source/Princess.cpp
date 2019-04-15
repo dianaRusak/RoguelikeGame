@@ -37,3 +37,7 @@ CollideResult Princess::Collide(Floor *_ci) {
 CollideResult Princess::Move(std::vector<Actor *> v, int dir) {
     return CannotMove;
 }
+
+CollideResult Princess::Collide(FireBall *_ci) {
+    return _ci->Collide(this);
+}

@@ -35,6 +35,10 @@ CollideResult Floor::Collide(Floor *_ci) {
     return CannotMove;
 }
 
+CollideResult Floor::Collide(FireBall *_ci) {
+    return _ci->Collide(this);
+}
+
 CollideResult Floor::Move(std::vector<Actor *> v, int dir) {
     return CannotMove;//return Victory;
 }

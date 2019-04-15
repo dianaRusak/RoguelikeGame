@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../Actors.hpp"
-#include "../include/Dragon.h"
-#include "../include/Wall.h"
-#include "../include/Zombie.h"
-#include "../include/Princess.h"
+#include "Dragon.h"
+#include "Wall.h"
+#include "Zombie.h"
+#include "Princess.h"
 #include "Floor.h"
+#include "FireBall.h"
 
 const int score_kill = 10;
 
@@ -51,6 +52,8 @@ public:
     CollideResult Collide(Princess *) override;
 
     CollideResult Collide(Floor *) override;
+
+    CollideResult Collide(FireBall *) override;
 
 //    Actor *findActor(std::vector<Actor *> act, std::pair<int, int> dir = {-1, -1}) override;
 

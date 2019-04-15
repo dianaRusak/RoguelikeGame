@@ -43,7 +43,11 @@ CollideResult Hero::Collide(Zombie *_ci) {
     return GameOver;
 }
 
-CollideResult Hero::Collide(Princess *_ci) {
+CollideResult Hero::Collide(FireBall *_ci) {
+    return _ci->Collide(this);
+}
+
+CollideResult Hero::Collide(Princess *) {
     return Victory;
 }
 
@@ -64,3 +68,5 @@ CollideResult Hero::Move(std::vector<Actor *> v, int dir) {
     }
     return k;
 }
+
+

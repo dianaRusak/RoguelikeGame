@@ -46,6 +46,10 @@ CollideResult Dragon::Collide(Floor *_ci) {
     return CanMove;
 }
 
+CollideResult Dragon::Collide(FireBall *_ci) {
+    return _ci->Collide(this);
+}
+
 int Random(int min, int max) {
     return min + rand() % (max - min);
 }
@@ -69,4 +73,5 @@ CollideResult Dragon::Move(std::vector<Actor *> v, int dir) {
     }
     return k;
 }
+
 

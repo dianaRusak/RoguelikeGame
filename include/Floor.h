@@ -6,6 +6,7 @@
 #include "Princess.h"
 #include "Dragon.h"
 #include "Wall.h"
+#include "FireBall.h"
 
 class Floor : public Actor {
 public:
@@ -28,6 +29,8 @@ public:
 
     CollideResult Collide(Floor *) override;
 
-    CollideResult Move(std::vector<Actor *>,
-                       int dir) override;
+    CollideResult Collide(FireBall *) override;
+
+    CollideResult Move(std::vector<Actor *> v, int dir);
+
 };

@@ -1,3 +1,4 @@
+#include <linux/input-event-codes.h>
 #include "ncurses.h"
 #include "GameManager.h"
 
@@ -104,6 +105,11 @@ void GameManager::start() {
                                               {KEY_RIGHT, 1},
                                               {KEY_DOWN,  2},
                                               {KEY_LEFT,  3},
+                                              {KEY_W,     4},
+                                              {KEY_D,     5},
+                                              {KEY_S,     6},
+                                              {KEY_A,     7},
+
                                       });
                 std::map<CollideResult, std::pair<int, int>> moveDirection({
                                                                                    {CanMoveUp,    {-1, 0}},
@@ -111,45 +117,64 @@ void GameManager::start() {
                                                                                    {CanMoveDown,  {1,  0}},
                                                                                    {CanMoveLeft,  {0,  -1}},
                                                                                    {CannotMove,   {0,  0}},
+                                                                                   {MobDie,       {0,  0}},
                                                                            });
                 auto sym = getch();
                 if (sym == KEY_ESC) {
                     mode_ = MainMenu;
                     MemoryFree();
                 } else {
-                    CollideResult moveResult = hero_->Move(map_.getArea(hero_->row_pos_, hero_->col_pos_), mp[sym]);
-                    switch (moveResult) {
-                        case GameOver:
-                        case Victory: {
-                            mode_ = EndGame;
-                            endgameMessage_ = moveResult == Victory ? "You win" : "You lose";
-                            MemoryFree();
+                    switch (sym) {//Fireball
+                        case KEY_W:
+                        case KEY_D:
+                        case KEY_S:
+                        case KEY_A: {
+                            Actor *fireBall = map_.CreateFireball(hero_->row_pos_, hero_->col_pos_, mp[sym] % 4);
+                            if (fireBall != nullptr) {
+                                mobs_.push_back(fireBall);
+                            }
                             break;
                         }
-                        case CannotMove:
-                        case CanMoveUp:
-                        case CanMoveRigth:
-                        case CanMoveDown:
-                        case CanMoveLeft: {
-                            map_.moveActor(hero_->row_pos_,
-                                           hero_->col_pos_,
-                                           hero_->row_pos_ + moveDirection[moveResult].first,
-                                           hero_->col_pos_ + moveDirection[moveResult].second);
-                            break;
-                        }
-                        case MobDie: {
-                            moveResult = (CollideResult) mp[sym];
-                            map_.v[hero_->row_pos_ +
-                                   moveDirection[moveResult].first][hero_->col_pos_ +
-                                                                    moveDirection[moveResult].second] = (Actor *) new Floor(
-                                    hero_->row_pos_ + moveDirection[moveResult].first,
-                                    hero_->row_pos_ + moveDirection[moveResult].second);
+                        default: {
+                            //others
+                            CollideResult moveResult =
+                                    hero_->Move(map_.getArea(hero_->row_pos_, hero_->col_pos_), mp[sym]);
+
+                            switch (moveResult) {
+                                case GameOver:
+                                case Victory: {
+                                    mode_ = EndGame;
+                                    endgameMessage_ = moveResult == Victory ? "You win" : "You lose";
+                                    MemoryFree();
+                                    break;
+                                }
+                                case CannotMove:
+                                case CanMoveUp:
+                                case CanMoveRigth:
+                                case CanMoveDown:
+                                case CanMoveLeft: {
+                                    map_.moveActor(hero_->row_pos_, hero_->col_pos_,
+                                                   hero_->row_pos_ + moveDirection[moveResult].first,
+                                                   hero_->col_pos_ + moveDirection[moveResult].second);
+                                    break;
+                                }
+                                case MobDie: {
+                                    moveResult = (CollideResult) mp[sym];
+                                    map_.v[hero_->row_pos_ +
+                                           moveDirection[moveResult].first][hero_->col_pos_ +
+                                                                            moveDirection[moveResult].second] = (Actor *) new Floor(
+                                            hero_->row_pos_ + moveDirection[moveResult].first,
+                                            hero_->row_pos_ + moveDirection[moveResult].second);
+//
+                                    break;
+                                }
+                            }
                             break;
                         }
                     }
-                    if (mode_ == EndGame) {
+
+                    if (mode_ == EndGame)
                         break;
-                    }
                     for (int i = 0; i < mobs_.size(); ++i) {
                         auto mob = mobs_[i];
                         CollideResult moveResult2 = mob->Move(map_.getArea(mob->row_pos_, mob->col_pos_), mp[sym]);
@@ -157,7 +182,7 @@ void GameManager::start() {
                             case GameOver:
                             case Victory: {
                                 mode_ = EndGame;
-                                endgameMessage_ = moveResult == Victory ? "You win" : "You lose";
+                                endgameMessage_ = moveResult2 == Victory ? "You win" : "You lose";
                                 MemoryFree();
                                 break;
                             }
@@ -170,8 +195,45 @@ void GameManager::start() {
                                                mob->col_pos_ + moveDirection[moveResult2].second);
                                 break;
                             }
-                            case MobDie:
+                            case MobDie: {
+                                if (mob->GetIdent() == '@') {
+
+                                    Actor *actorToDelete =
+                                            map_.getArea(mob->row_pos_, mob->col_pos_)[((FireBall *) mob)->dir_];
+
+                                    int j = 0;
+                                    for (auto it = mobs_.begin(); it != mobs_.end(); ++it) {
+                                        if ((*it)->row_pos_ == actorToDelete->row_pos_ &&
+                                            (*it)->col_pos_ == actorToDelete->col_pos_) {
+                                            mobs_.erase(it);
+                                            break;
+                                        }
+                                    }
+
+                                    map_.DeleteActor(actorToDelete->row_pos_, actorToDelete->col_pos_);
+                                }
+
+                                for (auto it = mobs_.begin(); it != mobs_.end(); ++it) {
+                                    if ((*it)->row_pos_ == mob->row_pos_ &&
+                                        (*it)->col_pos_ == mob->col_pos_) {
+                                        mobs_.erase(it);
+                                        break;
+                                    }
+                                }
+                                map_.DeleteActor(mob->row_pos_, mob->col_pos_);
+                                break;
+                            }
                             case CannotMove: {
+                                if (mob->GetIdent() == '@') {
+                                    for (auto it = mobs_.begin(); it != mobs_.end(); ++it) {
+                                        if ((*it)->row_pos_ == mob->row_pos_ &&
+                                            (*it)->col_pos_ == mob->col_pos_) {
+                                            mobs_.erase(it);
+                                            break;
+                                        }
+                                    }
+                                    map_.DeleteActor(mob->row_pos_, mob->col_pos_);
+                                }
                                 break;
                             }
                         }
@@ -182,13 +244,15 @@ void GameManager::start() {
                     if (mode_ == EndGame) {
                         break;
                     }
-                }
 
-                break;
+                    break;
+                }
             }
         }
     }
+
     endwin();
+
 }
 
 void GameManager::MemoryFree() {

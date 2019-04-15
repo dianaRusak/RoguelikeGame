@@ -6,6 +6,8 @@
 #include "Zombie.h"
 #include "Princess.h"
 #include "Floor.h"
+#include "FireBall.h"
+
 
 class Dragon : public Actor {
 public:
@@ -31,6 +33,8 @@ public:
     CollideResult Collide(Actor *) override;
 
     CollideResult Collide(Floor *) override;
+
+    CollideResult Collide(FireBall *) override;
 
     CollideResult Move(std::vector<Actor *>, int dir = 0) override;
 

@@ -11,6 +11,8 @@
 
 class Dragon;
 
+class FireBall;
+
 class Hero;
 
 class Actor;
@@ -49,6 +51,8 @@ public:
     virtual CollideResult Collide(Princess *) = 0;
 
     virtual CollideResult Collide(Floor *) = 0;
+
+    virtual CollideResult Collide(FireBall *) = 0;
 
     char GetIdent() {
         return identifier;

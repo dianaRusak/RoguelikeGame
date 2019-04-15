@@ -2,17 +2,23 @@
 
 #include "../Actors.hpp"
 #include "Hero.h"
-#include "Wall.h"
 #include "Zombie.h"
+#include "Princess.h"
 #include "Dragon.h"
-#include "Floor.h"
-#include "FireBall.h"
+#include "Wall.h"
 
-class Princess : public Actor {
+const int FireHero = 10;
+
+class FireBall : public Actor {
 public:
 
-    Princess(int position_row,
-             int position_col);
+    FireBall(int position_row,
+             int position_col,
+             int direction,
+             int damage = 10);
+
+    int dir_;
+    int damage_;
 
     CollideResult Collide(Hero *) override;
 
@@ -32,7 +38,5 @@ public:
 
     CollideResult Move(std::vector<Actor *>,
                        int dir) override;
-
-//    Actor *findActor(std::vector<Actor *> act, std::pair<int, int> dir = {-1, -1}) override;
 
 };

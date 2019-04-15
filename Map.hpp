@@ -84,5 +84,28 @@ public:
         v[row_pos_][col_pos_]->col_pos_ = col_pos2;
         std::swap(v[row_pos_][col_pos_], v[row_pos2][col_pos2]);
     }
+
+    Actor *CreateFireball(int row, int col, int dir) {
+        std::map<int, std::pair<int, int>> position({
+                                                            {0, {-1, 0}},
+                                                            {1, {0,  1}},
+                                                            {2, {1,  0}},
+                                                            {3, {0,  -1}},
+                                                    });
+
+        if (v[row + position[dir].first][col + position[dir].second]->GetIdent() != '.') {
+            return nullptr;
+        }
+
+        Actor *a = new FireBall(row + position[dir].first, col + position[dir].second, dir);
+        delete v[row + position[dir].first][col + position[dir].second];
+        v[row + position[dir].first][col + position[dir].second] = a;
+        return a;
+    }
+
+    void DeleteActor(int row, int col) {
+        delete v[row][col];
+        v[row][col] = new Floor(row, col);
+    }
 };
 
