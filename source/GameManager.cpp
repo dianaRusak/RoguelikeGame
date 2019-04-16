@@ -1,55 +1,19 @@
 #include <linux/input-event-codes.h>
 #include "ncurses.h"
-#include "GameManager.h"
+#include "../include/GameManager.h"
 
 void GameManager::start() {
-    stop_ = false;
-    mode_ = MainMenu;
+    config.conRead();
     clear();
     initscr();
-    unsigned choice = 0; //Выбор пользователя
-    getmaxyx(stdscr, max_rows, max_cols);
-    int mid_rows = max_rows / 2;
-    int mid_cols = max_cols / 2;
-    curs_set(0);
-    keypad(stdscr, true);
+    InitGM();
     while (!stop_) {
         switch (mode_) {
             case MainMenu: {
                 clear();
-                for (unsigned i = 0; i < MENU_SIZE; i++) //Проходим по всем элементам меню
-                {
-                    move(mid_rows - 1 + i, mid_cols - 4);
-                    if (i == choice) {//Если текущий элемент совпадает с выбором пользователя
-                        move(mid_rows - 1 + i, mid_cols - 4 - 1);
-                        addch('>'); //Выводим указатель
-                    }
-
-                    printw("%s\n", items[i].c_str());
-                }
-
-                //Получаем нажатие пользователя
-                switch (getch()) {
-                    case KEY_UP:
-                        if (choice) //Если возможно, переводим указатель вверх
-                            choice--;
-                        break;
-                    case KEY_DOWN:
-                        if (!choice) //Если возможно, переводим указатель вниз
-                            choice++;
-                        break;
-                    case KEY_ENT:
-                        if (choice) {
-                            stop_ = true;
-                        } else {
-                            map_.Load(mobs_, hero_, princess_, map_cols_, map_rows_);
-                            mode_ = InGame;
-                            clear();
-                        }
-                        break;
-                }
+                CreateMenu(mid_rows, mid_cols, choice);
                 break;
-            }
+                }
 
             case EndGame: {
                 clear();
@@ -57,7 +21,6 @@ void GameManager::start() {
                 map_rows_ = 0;
                 map_cols_ = 0;
                 mobs_.clear();
-
                 switch (getch()) {
                     case KEY_ENT:
                     case KEY_ESC: {
@@ -69,7 +32,6 @@ void GameManager::start() {
             }
 
             case InGame: {
-//                clear();
                 getmaxyx(stdscr, max_rows, max_cols);
                 mid_rows = max_rows / 2;
                 mid_cols = max_cols / 2;
@@ -98,7 +60,8 @@ void GameManager::start() {
                 }
 
                 mvwprintw(stdscr, 0, 0, "%s %d ", "Health", hero_->cur_health_points_);
-                mvwprintw(stdscr, 1, 0, "%s %d ", "Points", ((Hero *) hero_)->cur_score_points_);
+                mvwprintw(stdscr, 1, 0, "%s %d ", "Points", hero_->cur_score_points_);
+                mvwprintw(stdscr, 2, 0, "%s %d ", "Mana", hero_->cur_mana_points_);
 
                 std::map<int, int> mp({ // pair -> int
                                               {KEY_UP,    0},
@@ -111,14 +74,14 @@ void GameManager::start() {
                                               {KEY_A,     7},
 
                                       });
-                std::map<CollideResult, std::pair<int, int>> moveDirection({
-                                                                                   {CanMoveUp,    {-1, 0}},
-                                                                                   {CanMoveRigth, {0,  1}},
-                                                                                   {CanMoveDown,  {1,  0}},
-                                                                                   {CanMoveLeft,  {0,  -1}},
-                                                                                   {CannotMove,   {0,  0}},
-                                                                                   {MobDie,       {0,  0}},
-                                                                           });
+                std::map<CollideResult, std::pair<int, int>> mvDir({
+                                                                           {CanMoveUp,    {-1, 0}},
+                                                                           {CanMoveRigth, {0,  1}},
+                                                                           {CanMoveDown,  {1,  0}},
+                                                                           {CanMoveLeft,  {0,  -1}},
+                                                                           {CannotMove,   {0,  0}},
+                                                                           {MobDie,       {0,  0}},
+                                                                   });
                 auto sym = getch();
                 if (sym == KEY_ESC) {
                     mode_ = MainMenu;
@@ -129,13 +92,20 @@ void GameManager::start() {
                         case KEY_D:
                         case KEY_S:
                         case KEY_A: {
-                            Actor *fireBall = map_.CreateFireball(hero_->row_pos_, hero_->col_pos_, mp[sym] % 4);
-                            if (fireBall != nullptr) {
-                                mobs_.push_back(fireBall);
+                            if (hero_->cur_mana_points_ > 0) {
+                                Actor *fireBall = map_.CreateFireball(hero_->row_pos_, hero_->col_pos_, mp[sym] % 4,
+                                                                      config);
+                                hero_->cur_mana_points_ -= config.mana_damage_hero;
+                                if (fireBall != nullptr) {
+                                    mobs_.push_back(fireBall);
+                                }
                             }
                             break;
                         }
-                        default: {
+                        case KEY_UP:
+                        case KEY_RIGHT:
+                        case KEY_DOWN:
+                        case KEY_LEFT: {
                             //others
                             CollideResult moveResult =
                                     hero_->Move(map_.getArea(hero_->row_pos_, hero_->col_pos_), mp[sym]);
@@ -154,18 +124,23 @@ void GameManager::start() {
                                 case CanMoveDown:
                                 case CanMoveLeft: {
                                     map_.moveActor(hero_->row_pos_, hero_->col_pos_,
-                                                   hero_->row_pos_ + moveDirection[moveResult].first,
-                                                   hero_->col_pos_ + moveDirection[moveResult].second);
+                                                   hero_->row_pos_ + mvDir[moveResult].first,
+                                                   hero_->col_pos_ + mvDir[moveResult].second);
                                     break;
                                 }
                                 case MobDie: {
                                     moveResult = (CollideResult) mp[sym];
-                                    map_.v[hero_->row_pos_ +
-                                           moveDirection[moveResult].first][hero_->col_pos_ +
-                                                                            moveDirection[moveResult].second] = (Actor *) new Floor(
-                                            hero_->row_pos_ + moveDirection[moveResult].first,
-                                            hero_->row_pos_ + moveDirection[moveResult].second);
-//
+                                    Actor *actorToDelete = map_.v[hero_->row_pos_ + mvDir[moveResult].first]
+                                    [hero_->col_pos_ + mvDir[moveResult].second];
+
+                                    for (auto it = mobs_.begin(); it != mobs_.end(); ++it) {
+                                        if ((*it)->row_pos_ == actorToDelete->row_pos_ &&
+                                            (*it)->col_pos_ == actorToDelete->col_pos_) {
+                                            mobs_.erase(it);
+                                            break;
+                                        }
+                                    }
+                                    map_.DeleteActor(actorToDelete->row_pos_, actorToDelete->col_pos_, config);
                                     break;
                                 }
                             }
@@ -191,17 +166,16 @@ void GameManager::start() {
                             case CanMoveLeft:
                             case CanMoveDown: {
                                 map_.moveActor(mob->row_pos_, mob->col_pos_,
-                                               mob->row_pos_ + moveDirection[moveResult2].first,
-                                               mob->col_pos_ + moveDirection[moveResult2].second);
+                                               mob->row_pos_ + mvDir[moveResult2].first,
+                                               mob->col_pos_ + mvDir[moveResult2].second);
                                 break;
                             }
                             case MobDie: {
                                 if (mob->GetIdent() == '@') {
-
+                                    //вытазили область и чувака который сдох
                                     Actor *actorToDelete =
                                             map_.getArea(mob->row_pos_, mob->col_pos_)[((FireBall *) mob)->dir_];
-
-                                    int j = 0;
+                                    //выкинули из массива трупак
                                     for (auto it = mobs_.begin(); it != mobs_.end(); ++it) {
                                         if ((*it)->row_pos_ == actorToDelete->row_pos_ &&
                                             (*it)->col_pos_ == actorToDelete->col_pos_) {
@@ -209,8 +183,8 @@ void GameManager::start() {
                                             break;
                                         }
                                     }
-
-                                    map_.DeleteActor(actorToDelete->row_pos_, actorToDelete->col_pos_);
+                                    //подчистили за ним
+                                    map_.DeleteActor(actorToDelete->row_pos_, actorToDelete->col_pos_, config);
                                 }
 
                                 for (auto it = mobs_.begin(); it != mobs_.end(); ++it) {
@@ -220,7 +194,7 @@ void GameManager::start() {
                                         break;
                                     }
                                 }
-                                map_.DeleteActor(mob->row_pos_, mob->col_pos_);
+                                map_.DeleteActor(mob->row_pos_, mob->col_pos_, config);
                                 break;
                             }
                             case CannotMove: {
@@ -232,7 +206,7 @@ void GameManager::start() {
                                             break;
                                         }
                                     }
-                                    map_.DeleteActor(mob->row_pos_, mob->col_pos_);
+                                    map_.DeleteActor(mob->row_pos_, mob->col_pos_, config);
                                 }
                                 break;
                             }
@@ -250,10 +224,9 @@ void GameManager::start() {
             }
         }
     }
-
     endwin();
-
 }
+
 
 void GameManager::MemoryFree() {
     hero_ = nullptr;
@@ -267,4 +240,47 @@ void GameManager::MemoryFree() {
         map_.v[row].clear();
     }
     map_.v.clear();
+}
+
+void GameManager::CreateMenu(int mid_rows, int mid_cols, unsigned choice) {
+    for (unsigned i = 0; i < MENU_SIZE; i++) //Проходим по всем элементам меню
+    {
+        move(mid_rows - 1 + i, mid_cols - 4);
+        if (i == choice) {//Если текущий элемент совпадает с выбором пользователя
+            move(mid_rows - 1 + i, mid_cols - 4 - 1);
+            addch('>'); //Выводим указатель
+        }
+        printw("%s\n", items[i].c_str());
+    }
+    //Получаем нажатие пользователя
+    switch (getch()) {
+        case KEY_UP:
+            if (choice) //Если возможно, переводим указатель вверх
+                choice--;
+            break;
+        case KEY_DOWN:
+            if (!choice) //Если возможно, переводим указатель вниз
+                choice++;
+            break;
+        case KEY_ENT:
+            if (choice) {
+                stop_ = true;
+            } else {
+                map_.Load(mobs_, hero_, princess_, map_cols_, map_rows_, config);
+                mode_ = InGame;
+                clear();
+            }
+            break;
+    }
+}
+
+void GameManager::InitGM() {
+    stop_ = false;
+    mode_ = MainMenu;
+    choice = 0; //Выбор пользователя
+    getmaxyx(stdscr, max_rows, max_cols);
+    mid_rows = max_rows / 2;
+    mid_cols = max_cols / 2;
+    curs_set(0);
+    keypad(stdscr, true);
 }

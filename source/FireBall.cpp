@@ -1,16 +1,19 @@
 #include "../include/FireBall.h"
 
-FireBall::FireBall(int position_row, int position_col, int direction, int damage) {
-    row_pos_ = position_row; //  TODO initializer list
+FireBall::FireBall(int position_row,
+                   int position_col,
+                   int direction,
+                   int damage,
+                   int ident) {
+    row_pos_ = position_row;
     col_pos_ = position_col;
     dir_ = direction;
     damage_ = damage;
-    identifier = '@';
+    identifier = ident;
 }
 
 CollideResult FireBall::Collide(Hero *_ci) {
     _ci->cur_health_points_ -= this->damage_;
-//    _ci->cur_score_points_ -= FireHero;
     return _ci->cur_health_points_ <= 0 ? GameOver : CannotMove;
 }
 
@@ -20,7 +23,7 @@ CollideResult FireBall::Collide(Dragon *_ci) {
 }
 
 CollideResult FireBall::Collide(Wall *_ci) {
-    return CannotMove; ////хзхзхзхзхз, его же надо убирать
+    return CannotMove;
 }
 
 
@@ -43,6 +46,10 @@ CollideResult FireBall::Collide(FireBall *) {
 
 CollideResult FireBall::Collide(Floor *_ci) {
     return CanMove;
+}
+
+CollideResult FireBall::Collide(BonusManaBox *_ci) {
+    return _ci->Collide(this);
 }
 
 CollideResult FireBall::Move(std::vector<Actor *> v, int dir) {

@@ -1,13 +1,15 @@
 #pragma once
 
-#include "../Actors.hpp"
+#include "Actors.hpp"
 #include "Hero.h"
 #include "Zombie.h"
+#include "Floor.h"
 #include "Princess.h"
-#include "Dragon.h"
 #include "Wall.h"
+#include "Dragon.h"
+#include "BonusManaBox.h"
 
-const int FireHero = 10;
+//#include "Config.h"
 
 class FireBall : public Actor {
 public:
@@ -15,10 +17,8 @@ public:
     FireBall(int position_row,
              int position_col,
              int direction,
-             int damage = 10);
-
-    int dir_;
-    int damage_;
+             int damage,
+             int ident);
 
     CollideResult Collide(Hero *) override;
 
@@ -36,7 +36,11 @@ public:
 
     CollideResult Collide(FireBall *) override;
 
+    CollideResult Collide(BonusManaBox *) override;
+
     CollideResult Move(std::vector<Actor *>,
                        int dir) override;
 
+    int dir_;
+    int damage_;
 };

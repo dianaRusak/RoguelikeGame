@@ -1,12 +1,13 @@
 #pragma once
 
-#include "../Actors.hpp"
+#include "Actors.hpp"
 #include "Hero.h"
 #include "Wall.h"
 #include "Dragon.h"
 #include "Princess.h"
 #include "Floor.h"
 #include "FireBall.h"
+//#include "Config.h"
 
 class Zombie : public Actor {
 public:
@@ -14,11 +15,11 @@ public:
     Zombie(
             int position_row,
             int position_col,
-            int max_health = 30,
-            int cur_health = 30,
-            int damage = 5,
-            int max_mana = 30,
-            int cur_mana = 30);
+            int max_health,
+            int cur_health,
+            int damage,
+            int score,
+            char ident);
 
     CollideResult Collide(Hero *) override;
 
@@ -36,13 +37,12 @@ public:
 
     CollideResult Collide(FireBall *) override;
 
+    CollideResult Collide(BonusManaBox *) override;
+
     CollideResult Move(std::vector<Actor *>,
                        int dir = 0) override;
 
-//    Actor* findActor(std::vector<Actor*> act, std::pair<int, int> dir = {-1, -1}) override;
-
     int damage_;
-    int max_mana_points_;
-    int cur_mana_points_;
+    int score_kill_Z;
 };
 

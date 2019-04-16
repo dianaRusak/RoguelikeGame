@@ -3,13 +3,15 @@
 #include <string>
 #include <vector>
 #include <iostream>
-//#include <bits/shared_ptr.h>
+#include "Config.h"
 
 
 //предварительное объявление-это объявление идентификатора, для которого ещё неt полного определения
 // Объявление идентификатора требуется компилятору для того, чтобы знать тип идентификатора
 
 class Dragon;
+
+class BonusManaBox;
 
 class FireBall;
 
@@ -31,10 +33,12 @@ enum CollideResult {
 
 class Actor {
 public:
-    int max_health_points_ = 0;
-    int cur_health_points_ = 0;
-    int row_pos_ = 0;
-    int col_pos_ = 0;
+    int max_health_points_;
+    int cur_health_points_;
+    int cur_score_points_;
+    int cur_mana_points_;
+    int row_pos_;
+    int col_pos_;
 
     virtual CollideResult Move(std::vector<Actor *>, int dir = 0) = 0;
 
@@ -53,6 +57,8 @@ public:
     virtual CollideResult Collide(Floor *) = 0;
 
     virtual CollideResult Collide(FireBall *) = 0;
+
+    virtual CollideResult Collide(BonusManaBox *) = 0;
 
     char GetIdent() {
         return identifier;

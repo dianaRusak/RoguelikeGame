@@ -1,18 +1,22 @@
 #pragma once
 
-#include "../Actors.hpp"
+#include "Actors.hpp"
 #include "Hero.h"
-#include "Wall.h"
 #include "Zombie.h"
-#include "Dragon.h"
 #include "Floor.h"
+#include "Wall.h"
+#include "Dragon.h"
 #include "FireBall.h"
+#include "BonusManaBox.h"
+
+//#include "Config.h"
 
 class Princess : public Actor {
 public:
 
     Princess(int position_row,
-             int position_col);
+             int position_col,
+             char ident);
 
     CollideResult Collide(Hero *) override;
 
@@ -30,9 +34,9 @@ public:
 
     CollideResult Collide(FireBall *) override;
 
+    CollideResult Collide(BonusManaBox *) override;
+
     CollideResult Move(std::vector<Actor *>,
                        int dir) override;
-
-//    Actor *findActor(std::vector<Actor *> act, std::pair<int, int> dir = {-1, -1}) override;
 
 };

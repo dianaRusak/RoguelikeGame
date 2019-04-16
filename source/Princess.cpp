@@ -1,9 +1,11 @@
 #include "../include/Princess.h"
 
-Princess::Princess(int position_row, int position_col) {
+Princess::Princess(int position_row,
+                   int position_col,
+                   char ident) {
     row_pos_ = position_row;
     col_pos_ = position_col;
-    identifier = 'P';
+    identifier = ident;
 }
 
 CollideResult Princess::Collide(Hero *_ci) {
@@ -32,6 +34,10 @@ CollideResult Princess::Collide(Princess *_ci) {
 
 CollideResult Princess::Collide(Floor *_ci) {
     return CannotMove;
+}
+
+CollideResult Princess::Collide(BonusManaBox *_ci) {
+    return _ci->Collide(this);
 }
 
 CollideResult Princess::Move(std::vector<Actor *> v, int dir) {

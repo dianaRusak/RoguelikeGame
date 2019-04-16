@@ -1,24 +1,26 @@
 #pragma once
 
-#include "../Actors.hpp"
+#include "Actors.hpp"
 #include "Hero.h"
-#include "Wall.h"
 #include "Zombie.h"
-#include "Princess.h"
 #include "Floor.h"
+#include "Princess.h"
+#include "Wall.h"
 #include "FireBall.h"
-
+#include "BonusManaBox.h"
 
 class Dragon : public Actor {
 public:
 
     Dragon(int position_row,
            int position_col,
-           int max_health = 50,
-           int cur_health = 50,
-           int damage = 10,
-           int max_mana = 40,
-           int cur_mana = 40);
+           int max_health,
+           int cur_health,
+           int damage,
+           int max_mana,
+           int cur_mana,
+           int score,
+           char ident);
 
     CollideResult Collide(Hero *) override;
 
@@ -36,11 +38,12 @@ public:
 
     CollideResult Collide(FireBall *) override;
 
-    CollideResult Move(std::vector<Actor *>, int dir = 0) override;
+    CollideResult Collide(BonusManaBox *) override;
 
-//    Actor *findActor(std::vector<Actor *> act, std::pair<int, int> dir = {-1, -1}) override;
+    CollideResult Move(std::vector<Actor *>, int dir = 0) override;
 
     int max_mana_points_;
     int damage_;
     int cur_mana_points_;
+    int score_kill_D;
 };
