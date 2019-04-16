@@ -25,9 +25,23 @@ public:
 
     void MemoryFree();
 
-    void CreateMenu(int mid_rows, int mid_cols, unsigned choice);
+    void CreateMenu();
 
     void InitGM();
+
+    void ExitGM();
+
+    void HeroCentralization();
+
+    void MapDrawing();
+
+    void GameHero(int sym);
+
+    void FireballAttack(int sym);
+
+    void HeroStep(int sym);
+
+    void MobStep(int sym, Actor *mob);
 
     const std::string items[MENU_SIZE] = {
             "Start",
@@ -38,10 +52,33 @@ private:
     std::vector<Actor *> mobs_;
     bool stop_;
     Map map_;
+    int RechargeTimer;
     Hero *hero_;
     Actor *princess_;
     int max_rows, max_cols, mode_, map_cols_, map_rows_;
     std::string endgameMessage_;
     Config config;
-    int mid_rows, mid_cols, choice;
+    int mid_rows, mid_cols;
+    CollideResult moveResult;
+    unsigned choice;
+    int hero_row, hero_col, top_row_bound, bottom_row_bound, left_col_bound, right_col_bound;
+    std::map<int, int> mp{
+            {KEY_UP,    0},
+            {KEY_RIGHT, 1},
+            {KEY_DOWN,  2},
+            {KEY_LEFT,  3},
+            {KEY_W,     4},
+            {KEY_D,     5},
+            {KEY_S,     6},
+            {KEY_A,     7},
+
+    };
+    std::map<CollideResult, std::pair<int, int>> mvDir{
+            {CanMoveUp,    {-1, 0}},
+            {CanMoveRigth, {0,  1}},
+            {CanMoveDown,  {1,  0}},
+            {CanMoveLeft,  {0,  -1}},
+            {CannotMove,   {0,  0}},
+            {MobDie,       {0,  0}},
+    };
 };
