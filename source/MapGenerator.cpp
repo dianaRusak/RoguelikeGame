@@ -1,5 +1,5 @@
 #include <random>
-#include "MapGenerator.h"
+#include "../include/MapGenerator.h"
 
 void MapGenerator::setSize(const int rows, const int cols) {
     this->canvas_.resize((unsigned long) rows);
@@ -12,7 +12,7 @@ void MapGenerator::setSize(const int rows, const int cols) {
 
 //инициализирует канвас перед генерациней карты
 void MapGenerator::initCanvas() {
-    //TODO: add check if tiles are uploaded
+
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 7);
@@ -22,7 +22,7 @@ void MapGenerator::initCanvas() {
             this->canvas_[i][j] = 0;
         }
     }
-    //using random to initialize canvas with different tile types (a - number of map tile)
+    //через рандом инициализирует канвас из tiles (a - number of map tile)
     for (int i = 1; i < this->canvas_rows_ - 1; ++i) {
         for (int j = 1; j < this->canvas_cols_ - 1; ++j) {
             int a = dis(gen);
@@ -57,7 +57,7 @@ void MapGenerator::fillCanvas() {
 
 }
 
-//read tiles from template directory
+
 void MapGenerator::readTiles() {
 
     this->tile_rows_ = 5;
@@ -123,7 +123,7 @@ void MapGenerator::addActors() {
 }
 
 
-///проверяет, есть ли путь из one в two, bfs ван лаф
+///проверяет, есть ли путь из one в two
 
 bool MapGenerator::checkReach(int row_one, int col_one, int row_two, int col_two) {
 

@@ -13,7 +13,7 @@
 #include "Princess.h"
 #include "Config.h"
 
-#include "../MapGenerator.h"
+#include "MapGenerator.h"
 
 class Map {
 public:

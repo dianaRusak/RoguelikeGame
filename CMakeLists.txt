@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-lncurses")
 set(CMAKE_CXX_FLAGS "-lncurses -fsanitize=address")
 
-add_executable(testRogulike source/main.cpp include/GameManager.h include/Actors.hpp include/Map.hpp source/Hero.cpp include/Hero.h source/Dragon.cpp include/Dragon.h source/Wall.cpp include/Wall.h source/Zombie.cpp include/Zombie.h source/Princess.cpp include/Princess.h source/Dragon.cpp include/Dragon.h source/GameManager.cpp include/Floor.h source/Floor.cpp source/FireBall.cpp include/FireBall.h source/Floor.cpp include/Floor.h source/BonusManaBox.cpp include/BonusManaBox.h source/Config.cpp include/Config.h source/BonusHealth.cpp MapGenerator.cpp MapGenerator.h)
+add_executable(testRogulike source/main.cpp include/GameManager.h include/Actors.hpp include/Map.hpp source/Hero.cpp include/Hero.h source/Dragon.cpp include/Dragon.h source/Wall.cpp include/Wall.h source/Zombie.cpp include/Zombie.h source/Princess.cpp include/Princess.h source/Dragon.cpp include/Dragon.h source/GameManager.cpp include/Floor.h source/Floor.cpp source/FireBall.cpp include/FireBall.h source/Floor.cpp include/Floor.h source/BonusManaBox.cpp include/BonusManaBox.h source/Config.cpp include/Config.h source/BonusHealth.cpp source/MapGenerator.cpp include/MapGenerator.h)
 
 set(CURSES_NEED_NCURSES TRUE)
 find_package(Curses REQUIRED)
