@@ -1,43 +1,47 @@
 #pragma once
 
+#include <map>
+
 class Config {
 public:
-    int score_kill_D;
-    int score_kill_Z;
 
-    char identifier_bonusManaBox;
-    char identifier_bonusHealthBox;
-    int hp_bonus_hero;
+    std::map<std::string, int> mp_{
+            {"score_kill_D",              0},
+            {"score_kill_Z",              0},
+            {"identifier_bonusManaBox",   0},
+            {"identifier_bonusHealthBox", 0},
+            {"hp_bonus_hero",             0},
 
-    int max_health_dragon;
-    int cur_health_dragon;
-    int damage_dragon;
-    int max_mana_dragon;
-    int cur_mana_dragon;
-    char identifier_dragon;
+            {"max_health_dragon",         0},
+            {"cur_health_dragon",         0},
+            {"damage_dragon",             0},
+            {"max_mana_dragon",           0},
+            {"cur_mana_dragon",           0},
+            {"identifier_dragon",         0},
 
-    int damage_fireBall;
-    char identifier_fireBall;
+            {"damage_fireBall",           0},
+            {"identifier_fireBall",       0},
 
-    char identifier_floor;
+            {"identifier_floor",          0},
 
-    int mana_damage_hero;
-    int max_health_hero;
-    int cur_health_hero;
-    int damage_hero;
-    int max_mana_hero;
-    int cur_mana_hero;
-    int cur_score_hero;
-    char identifier_hero;
+            {"mana_damage_hero",          0},
+            {"max_health_hero",           0},
+            {"cur_health_hero",           0},
+            {"damage_hero",               0},
+            {"max_mana_hero",             0},
+            {"cur_mana_hero",             0},
+            {"cur_score_hero",            0},
+            {"identifier_hero",           0},
 
-    char identifier_princess;
+            {"identifier_princess",       0},
 
-    char identifier_wall;
+            {"identifier_wall",           0},
 
-    int max_health_zombie;
-    int cur_health_zombie;
-    int damage_zombie;
-    char identifier_zombie;
+            {"max_health_zombie",         0},
+            {"cur_health_zombie",         0},
+            {"damage_zombie",             0},
+            {"identifier_zombie",         0},
+    };
 
     void conRead();
 

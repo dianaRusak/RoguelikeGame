@@ -11,15 +11,15 @@ CollideResult BonusManaBox::Collide(Hero *_ci) {
         _ci->cur_mana_points_ += _ci->mana_damage_hero;
         return MobDie;
     }
-    return CannotMove;
+    return CanMove;
 }
 
 CollideResult BonusManaBox::Collide(Dragon *_ci) {
-    return CannotMove;
+    return CanMove;
 }
 
 CollideResult BonusManaBox::Collide(Wall *_ci) {
-    return CannotMove;
+    return CanMove;
 }
 
 
@@ -28,15 +28,15 @@ CollideResult BonusManaBox::Collide(Actor *_ci) {
 }
 
 CollideResult BonusManaBox::Collide(Zombie *_ci) {
-    return CannotMove;
+    return CanMove;
 }
 
 CollideResult BonusManaBox::Collide(Princess *_ci) {
-    return CannotMove;
+    return CanMove;
 }
 
 CollideResult BonusManaBox::Collide(Floor *_ci) {
-    return CannotMove;
+    return CanMove;
 }
 
 CollideResult BonusManaBox::Collide(FireBall *_ci) {

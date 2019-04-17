@@ -3,10 +3,9 @@
 #include <cstdio>
 #include <ncurses.h>
 #include <map>
-//#include <bits/shared_ptr.h>
 #include "Map.hpp"
 #include "Actors.hpp"
-//#include "Config.h"
+
 #define  KEY_ESC 27
 #define  KEY_ENT 10
 #define  MENU_SIZE 2

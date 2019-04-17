@@ -11,15 +11,15 @@ CollideResult BonusHealthBox::Collide(Hero *_ci) {
         _ci->cur_health_points_ += _ci->hp_bonus_hero_;
         return MobDie;
     }
-    return CannotMove;
+    return CanMove;
 }
 
 CollideResult BonusHealthBox::Collide(Dragon *_ci) {
-    return CannotMove;
+    return CanMove;
 }
 
 CollideResult BonusHealthBox::Collide(Wall *_ci) {
-    return CannotMove;
+    return CanMove;
 }
 
 CollideResult BonusHealthBox::Collide(Actor *_ci) {
@@ -27,15 +27,15 @@ CollideResult BonusHealthBox::Collide(Actor *_ci) {
 }
 
 CollideResult BonusHealthBox::Collide(Zombie *_ci) {
-    return CannotMove;
+    return CanMove;
 }
 
 CollideResult BonusHealthBox::Collide(Princess *_ci) {
-    return CannotMove;
+    return CanMove;
 }
 
 CollideResult BonusHealthBox::Collide(Floor *_ci) {
-    return CannotMove;
+    return CanMove;
 }
 
 CollideResult BonusHealthBox::Collide(FireBall *_ci) {

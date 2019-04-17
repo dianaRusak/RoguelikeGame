@@ -143,7 +143,8 @@ void GameManager::HeroCentralization() {
             mvaddch(row, col, ' ');
         }
     }
-    mvaddch(mid_rows, mid_cols, map_.v[hero_->row_pos_][hero_->col_pos_]->GetIdent());
+    auto g = map_.v[hero_->row_pos_][hero_->col_pos_]->GetIdent();
+    mvaddch(mid_rows, mid_cols, g);
     hero_row = hero_->row_pos_;
     hero_col = hero_->col_pos_;
 
@@ -158,9 +159,10 @@ void GameManager::HeroCentralization() {
 void GameManager::MapDrawing() {
     for (int row = top_row_bound; row < bottom_row_bound; ++row) {
         for (int col = left_col_bound; col <= right_col_bound; ++col) {
+            auto g = map_.v[row][col]->GetIdent();
             mvaddch(mid_rows - hero_row + row,
                     mid_cols - hero_col + col,
-                    map_.v[row][col]->GetIdent());
+                    g);
         }
     }
     mvwprintw(stdscr, 0, 0, "%s %d ", "Health", hero_->cur_health_points_);
@@ -193,7 +195,7 @@ void GameManager::FireballAttackHero(int sym) {
     if (hero_->cur_mana_points_ > 0) {
         Actor *fireBall = map_.CreateFireball(hero_->row_pos_, hero_->col_pos_, mp[sym] % 4,
                                               config);
-        hero_->cur_mana_points_ -= config.mana_damage_hero;
+        hero_->cur_mana_points_ -= config.mp_["mana_damage_hero"];
         if (fireBall != nullptr) {
             mobs_.push_back(fireBall);
         }
@@ -256,7 +258,7 @@ void GameManager::MobStep(int sym, Actor *mob) {
             break;
         }
         case MobDie: {
-            if (mob->GetIdent() == config.identifier_fireBall) {
+            if (mob->GetIdent() == config.mp_["identifier_fireBall"]) {
                 //вытазили область и чувака который сдох
                 Actor *actorToDelete =
                         map_.getArea(mob->row_pos_, mob->col_pos_)[((FireBall *) mob)->dir_];
@@ -283,7 +285,7 @@ void GameManager::MobStep(int sym, Actor *mob) {
             break;
         }
         case CannotMove: {
-            if (mob->GetIdent() == config.identifier_fireBall) {
+            if (mob->GetIdent() == config.mp_["identifier_fireBall"]) {
                 for (auto it = mobs_.begin(); it != mobs_.end(); ++it) {
                     if ((*it)->row_pos_ == mob->row_pos_ &&
                         (*it)->col_pos_ == mob->col_pos_) {
