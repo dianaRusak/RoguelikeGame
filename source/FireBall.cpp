@@ -68,3 +68,7 @@ CollideResult FireBall::Move(std::vector<Actor *> v, int dir) {
     }
     return k;
 }
+
+CollideResult FireBall::Collide(BonusHealthBox *_ci) {
+    return _ci->Collide(this);
+}

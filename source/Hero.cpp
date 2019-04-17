@@ -1,7 +1,7 @@
 #include "../include/Hero.h"
 
 Hero::Hero(int position_row, int position_col, int max_health, int cur_health, int damage, int max_mana, int cur_mana,
-           int score, char ident, int mana) {
+           int score, char ident, int mana, int hp_bonus_hero) {
     cur_score_points_ = score;
     max_mana_points_ = max_mana;
     cur_mana_points_ = cur_mana;
@@ -12,6 +12,7 @@ Hero::Hero(int position_row, int position_col, int max_health, int cur_health, i
     cur_health_points_ = cur_health;
     identifier = ident;
     mana_damage_hero = mana;
+    hp_bonus_hero_ = hp_bonus_hero;
 }
 
 CollideResult Hero::Collide(Actor *_co) {
@@ -69,6 +70,10 @@ CollideResult Hero::Collide(FireBall *_ci) {
 
 CollideResult Hero::Collide(Princess *) {
     return Victory;
+}
+
+CollideResult Hero::Collide(BonusHealthBox *_ci) {
+    return _ci->Collide(this);
 }
 
 CollideResult Hero::Move(std::vector<Actor *> v, int dir) {

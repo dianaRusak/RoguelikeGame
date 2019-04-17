@@ -46,6 +46,10 @@ CollideResult Wall::Collide(BonusManaBox *_ci) {
     return _ci->Collide(this);
 }
 
+CollideResult Wall::Collide(BonusHealthBox *_ci) {
+    return _ci->Collide(this);
+}
+
 CollideResult Wall::Move(std::vector<Actor *> v, int dir) {
     return CannotMove;
 }

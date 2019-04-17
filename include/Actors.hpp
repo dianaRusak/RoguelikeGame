@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "Config.h"
 
 
 //предварительное объявление-это объявление идентификатора, для которого ещё неt полного определения
@@ -12,6 +11,8 @@
 class Dragon;
 
 class BonusManaBox;
+
+class BonusHealthBox;
 
 class FireBall;
 
@@ -59,6 +60,8 @@ public:
     virtual CollideResult Collide(FireBall *) = 0;
 
     virtual CollideResult Collide(BonusManaBox *) = 0;
+
+    virtual CollideResult Collide(BonusHealthBox *) = 0;
 
     char GetIdent() {
         return identifier;

@@ -56,7 +56,7 @@ public:
                         hero_ = new Hero(map_rows_, i, config.max_health_hero, config.cur_health_hero,
                                          config.damage_hero,
                                          config.max_mana_hero, config.cur_mana_hero, config.cur_score_hero,
-                                         config.identifier_hero, config.mana_damage_hero);
+                                         config.identifier_hero, config.mana_damage_hero, config.hp_bonus_hero);
                         mapAct.push_back(hero_);
                         break;
                     }
@@ -67,6 +67,11 @@ public:
                     }
                     case '^': {
                         new_actor = new BonusManaBox(map_rows_, i, config.identifier_bonusManaBox);
+                        mapAct.push_back(new_actor);
+                        break;
+                    }
+                    case 'v': {
+                        new_actor = new BonusHealthBox(map_rows_, i, config.identifier_bonusHealthBox);
                         mapAct.push_back(new_actor);
                         break;
                     }

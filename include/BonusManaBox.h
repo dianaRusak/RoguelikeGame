@@ -8,6 +8,7 @@
 #include "Wall.h"
 #include "Dragon.h"
 #include "FireBall.h"
+#include "BonusHealthBox.h"
 
 class BonusManaBox : public Actor {
 public:
@@ -35,6 +36,8 @@ public:
 
     CollideResult Collide(BonusManaBox *) override;
 
-    CollideResult Move(std::vector<Actor *> v, int dir);
+    CollideResult Collide(BonusHealthBox *) override;
+
+    CollideResult Move(std::vector<Actor *> v, int dir) override;
 
 };

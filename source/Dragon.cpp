@@ -57,10 +57,6 @@ CollideResult Dragon::Collide(BonusManaBox *_ci) {
     return _ci->Collide(this);
 }
 
-int Random(int min, int max) {
-    return min + rand() % (max - min);
-}
-
 CollideResult Dragon::Move(std::vector<Actor *> v, int dir) {
     dir = rand() % 4;
     CollideResult k = Collide(v[dir]);
@@ -79,6 +75,10 @@ CollideResult Dragon::Move(std::vector<Actor *> v, int dir) {
         }
     }
     return k;
+}
+
+CollideResult Dragon::Collide(BonusHealthBox *_ci) {
+    return _ci->Collide(this);
 }
 
 

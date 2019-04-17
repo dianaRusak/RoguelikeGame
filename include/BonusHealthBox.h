@@ -2,24 +2,21 @@
 
 #include "Actors.hpp"
 #include "Hero.h"
+#include "Zombie.h"
+#include "Floor.h"
+#include "Princess.h"
 #include "Wall.h"
 #include "Dragon.h"
-#include "Princess.h"
-#include "Floor.h"
 #include "FireBall.h"
-#include "BonusHealthBox.h"
+#include "BonusManaBox.h"
 
-class Zombie : public Actor {
+class BonusHealthBox : public Actor {
 public:
 
-    Zombie(
-            int position_row,
-            int position_col,
-            int max_health,
-            int cur_health,
-            int damage,
-            int score,
-            char ident);
+    BonusHealthBox(int position_row,
+                   int position_col,
+                   char ident);
+
 
     CollideResult Collide(Hero *) override;
 
@@ -41,10 +38,6 @@ public:
 
     CollideResult Collide(BonusHealthBox *) override;
 
-    CollideResult Move(std::vector<Actor *>,
-                       int dir = 0) override;
+    CollideResult Move(std::vector<Actor *> v, int dir) override;
 
-    int damage_;
-    int score_kill_Z;
 };
-

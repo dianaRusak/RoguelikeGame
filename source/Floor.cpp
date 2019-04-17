@@ -48,3 +48,7 @@ CollideResult Floor::Collide(BonusManaBox *_ci) {
 CollideResult Floor::Move(std::vector<Actor *> v, int dir) {
     return CannotMove;//return Victory;
 }
+
+CollideResult Floor::Collide(BonusHealthBox *_ci) {
+    return _ci->Collide(this);
+}

@@ -52,6 +52,10 @@ CollideResult Zombie::Collide(BonusManaBox *_ci) {
     return _ci->Collide(this);
 }
 
+CollideResult Zombie::Collide(BonusHealthBox *_ci) {
+    return _ci->Collide(this);
+}
+
 CollideResult Zombie::Move(std::vector<Actor *> v, int dir) {
     dir = rand() % 4;
     CollideResult k = Collide(v[dir]);

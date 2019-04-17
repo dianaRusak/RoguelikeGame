@@ -50,3 +50,7 @@ CollideResult BonusManaBox::Collide(BonusManaBox *_ci) {
 CollideResult BonusManaBox::Move(std::vector<Actor *> v, int dir) {
     return CannotMove;
 }
+
+CollideResult BonusManaBox::Collide(BonusHealthBox *_ci) {
+    return _ci->Collide(this);
+}

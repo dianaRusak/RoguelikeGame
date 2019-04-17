@@ -6,6 +6,8 @@ public:
     int score_kill_Z;
 
     char identifier_bonusManaBox;
+    char identifier_bonusHealthBox;
+    int hp_bonus_hero;
 
     int max_health_dragon;
     int cur_health_dragon;

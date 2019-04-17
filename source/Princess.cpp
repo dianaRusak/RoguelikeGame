@@ -44,6 +44,10 @@ CollideResult Princess::Move(std::vector<Actor *> v, int dir) {
     return CannotMove;
 }
 
+CollideResult Princess::Collide(BonusHealthBox *_ci) {
+    return _ci->Collide(this);
+}
+
 CollideResult Princess::Collide(FireBall *_ci) {
     return _ci->Collide(this);
 }

@@ -8,7 +8,7 @@
 #include "Dragon.h"
 #include "FireBall.h"
 #include "BonusManaBox.h"
-//#include "Config.h"
+#include "BonusHealthBox.h"
 
 class Hero : public Actor {
 public:
@@ -22,7 +22,8 @@ public:
          int cur_mana,
          int score,
          char ident,
-         int mana_damage_hero);
+         int mana_damage_hero,
+         int hp_bonus_hero);
 
     CollideResult Move(std::vector<Actor *>, int dir) override;
 
@@ -44,9 +45,12 @@ public:
 
     CollideResult Collide(BonusManaBox *) override;
 
+    CollideResult Collide(BonusHealthBox *) override;
+
     int cur_score_points_;
     int max_mana_points_;
     int cur_mana_points_;
     int damage_;
     int mana_damage_hero;
+    int hp_bonus_hero_;
 };

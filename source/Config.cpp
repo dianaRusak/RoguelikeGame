@@ -11,6 +11,8 @@ void Config::conRead() {
     fin >> const_identifier >> score_kill_Z;
 
     fin >> const_identifier >> identifier_bonusManaBox;
+    fin >> const_identifier >> identifier_bonusHealthBox;
+    fin >> const_identifier >> hp_bonus_hero;
 
     fin >> const_identifier >> max_health_dragon;
     fin >> const_identifier >> cur_health_dragon;
