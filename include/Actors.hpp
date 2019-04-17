@@ -66,8 +66,6 @@ public:
 
     virtual ~Actor() = default;
 
-//    virtual Actor* findActor(std::vector<Actor*> act, std::pair<int, int> dir = {-1, -1}) = 0;
-
 protected:
     char identifier = ' ';
 };

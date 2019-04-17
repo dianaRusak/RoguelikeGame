@@ -22,31 +22,27 @@ void GameManager::start() {
                 HeroCentralization();
                 MapDrawing();
                 auto sym = getch();
-                if (sym == KEY_ESC) {
-                    mode_ = MainMenu;
-                    MemoryFree();
-                } else {
-                    GameHero(sym);
-                    if (mode_ == EndGame)
-                        break;
-                    for (int i = 0; i < mobs_.size(); ++i) {
-                        auto mob = mobs_[i];
-                        if ((RechargeTimer == 5) && (mob->GetIdent() == 'D')) {
-                            RechargeTimer = 0;
-                            FireballAttackDragon(sym, mob);
-                        }
-                        moveResult = mob->Move(map_.getArea(mob->row_pos_, mob->col_pos_), mp[sym]);
-                        MobStep(sym, mob);
-                        if (mode_ == EndGame) {
-                            break;
-                        }
+
+                GameHero(sym);
+                if (mode_ == EndGame)
+                    break;
+                for (int i = 0; i < mobs_.size(); ++i) {
+                    auto mob = mobs_[i];
+                    if ((RechargeTimer % 5 == 0) && (mob->GetIdent() == 'D')) {
+                        FireballAttackDragon(sym, mob);
                     }
+                    moveResult = mob->Move(map_.getArea(mob->row_pos_, mob->col_pos_), mp[sym]);
+                    MobStep(sym, mob);
                     if (mode_ == EndGame) {
                         break;
                     }
+                }
+                if (mode_ == EndGame) {
                     break;
                 }
+                break;
             }
+
         }
     }
     endwin();
@@ -55,6 +51,7 @@ void GameManager::start() {
 void GameManager::MemoryFree() {
     hero_ = nullptr;
     princess_ = nullptr;
+    RechargeTimer = 1;
     for (int row = 0; row < map_.v.size(); ++row) {
         for (int col = 0; col < map_.v[row].size(); ++col) {
             if (map_.v[row][col] != nullptr) {

@@ -65,6 +65,11 @@ public:
                         mapAct.push_back(new_actor);
                         break;
                     }
+                    case '^': {
+                        new_actor = new BonusManaBox(map_rows_, i, config.identifier_bonusManaBox);
+                        mapAct.push_back(new_actor);
+                        break;
+                    }
                 }
             }
             map_cols_ = static_cast<int> (buff.length());

@@ -7,8 +7,11 @@ BonusManaBox::BonusManaBox(int position_row, int position_col, char ident) {
 }
 
 CollideResult BonusManaBox::Collide(Hero *_ci) {
-    _ci->cur_mana_points_ += _ci->mana_damage_hero;
-    return MobDie;
+    if (_ci->cur_mana_points_ + _ci->mana_damage_hero <= _ci->max_mana_points_) {
+        _ci->cur_mana_points_ += _ci->mana_damage_hero;
+        return MobDie;
+    }
+    return CannotMove;
 }
 
 CollideResult BonusManaBox::Collide(Dragon *_ci) {

@@ -8,7 +8,6 @@
 #include "Wall.h"
 #include "Dragon.h"
 #include "FireBall.h"
-#include "Config.h"
 
 class BonusManaBox : public Actor {
 public:

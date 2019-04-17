@@ -54,7 +54,7 @@ private:
     std::vector<Actor *> mobs_;
     bool stop_;
     Map map_;
-    int RechargeTimer = 0;
+    int RechargeTimer = 1;
     Hero *hero_;
     Actor *princess_;
     int max_rows, max_cols, mode_, map_cols_, map_rows_;
