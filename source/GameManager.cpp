@@ -31,6 +31,10 @@ void GameManager::start() {
                         break;
                     for (int i = 0; i < mobs_.size(); ++i) {
                         auto mob = mobs_[i];
+                        if ((RechargeTimer == 5) && (mob->GetIdent() == 'D')) {
+                            RechargeTimer = 0;
+                            FireballAttackDragon(sym, mob);
+                        }
                         moveResult = mob->Move(map_.getArea(mob->row_pos_, mob->col_pos_), mp[sym]);
                         MobStep(sym, mob);
                         if (mode_ == EndGame) {
@@ -61,6 +65,17 @@ void GameManager::MemoryFree() {
     }
     map_.v.clear();
 }
+
+void GameManager::FireballAttackDragon(int sym, Actor *mob) {
+    if (mob->GetIdent() == 'D') {
+        Actor *fireBall = map_.CreateFireball(mob->row_pos_, mob->col_pos_, mp[sym] % 4,
+                                              config);
+        if (fireBall != nullptr) {
+            mobs_.push_back(fireBall);
+        }
+    }
+}
+
 
 void GameManager::CreateMenu() {
     for (unsigned i = 0; i < MENU_SIZE; i++) //Проходим по всем элементам меню
@@ -103,6 +118,7 @@ void GameManager::InitGM() {
     mid_cols = max_cols / 2;
     curs_set(0);
     keypad(stdscr, true);
+    halfdelay(5);
 }
 
 void GameManager::ExitGM() {
@@ -161,7 +177,7 @@ void GameManager::GameHero(int sym) {
         case KEY_D:
         case KEY_S:
         case KEY_A: {
-            FireballAttack(sym);
+            FireballAttackHero(sym);
             break;
         }
         case KEY_UP:
@@ -169,13 +185,14 @@ void GameManager::GameHero(int sym) {
         case KEY_DOWN:
         case KEY_LEFT: {
             moveResult = hero_->Move(map_.getArea(hero_->row_pos_, hero_->col_pos_), mp[sym]);
+            RechargeTimer++;
             HeroStep(sym);
             break;
         }
     }
 }
 
-void GameManager::FireballAttack(int sym) {
+void GameManager::FireballAttackHero(int sym) {
     if (hero_->cur_mana_points_ > 0) {
         Actor *fireBall = map_.CreateFireball(hero_->row_pos_, hero_->col_pos_, mp[sym] % 4,
                                               config);

@@ -37,9 +37,11 @@ public:
 
     void GameHero(int sym);
 
-    void FireballAttack(int sym);
+    void FireballAttackHero(int sym);
 
     void HeroStep(int sym);
+
+    void FireballAttackDragon(int sym, Actor *mob);
 
     void MobStep(int sym, Actor *mob);
 
@@ -52,7 +54,7 @@ private:
     std::vector<Actor *> mobs_;
     bool stop_;
     Map map_;
-    int RechargeTimer;
+    int RechargeTimer = 0;
     Hero *hero_;
     Actor *princess_;
     int max_rows, max_cols, mode_, map_cols_, map_rows_;
