@@ -221,6 +221,13 @@ void GameManager::HeroStep(int sym) {
                            hero_->col_pos_ + mvDir[moveResult].second);
             break;
         }
+        case BonusUsed: {
+            moveResult = (CollideResult) mp[sym];
+            Actor *actorToDelete = map_.v[hero_->row_pos_ + mvDir[moveResult].first]
+            [hero_->col_pos_ + mvDir[moveResult].second];
+            map_.DeleteActor(actorToDelete->row_pos_, actorToDelete->col_pos_, config);
+            break;
+        }
         case MobDie: {
             moveResult = (CollideResult) mp[sym];
             Actor *actorToDelete = map_.v[hero_->row_pos_ + mvDir[moveResult].first]

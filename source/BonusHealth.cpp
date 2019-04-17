@@ -9,17 +9,17 @@ BonusHealthBox::BonusHealthBox(int position_row, int position_col, char ident) {
 CollideResult BonusHealthBox::Collide(Hero *_ci) {
     if (_ci->cur_health_points_ + _ci->hp_bonus_hero_ <= _ci->max_health_points_) {
         _ci->cur_health_points_ += _ci->hp_bonus_hero_;
-        return MobDie;
+        return BonusUsed;
     }
-    return CanMove;
+    return CannotMove;
 }
 
 CollideResult BonusHealthBox::Collide(Dragon *_ci) {
-    return CanMove;
+    return CannotMove;
 }
 
 CollideResult BonusHealthBox::Collide(Wall *_ci) {
-    return CanMove;
+    return CannotMove;
 }
 
 CollideResult BonusHealthBox::Collide(Actor *_ci) {
@@ -27,15 +27,15 @@ CollideResult BonusHealthBox::Collide(Actor *_ci) {
 }
 
 CollideResult BonusHealthBox::Collide(Zombie *_ci) {
-    return CanMove;
+    return CannotMove;
 }
 
 CollideResult BonusHealthBox::Collide(Princess *_ci) {
-    return CanMove;
+    return CannotMove;
 }
 
 CollideResult BonusHealthBox::Collide(Floor *_ci) {
-    return CanMove;
+    return CannotMove;
 }
 
 CollideResult BonusHealthBox::Collide(FireBall *_ci) {

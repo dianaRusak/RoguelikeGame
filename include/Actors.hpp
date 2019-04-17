@@ -29,7 +29,7 @@ class Princess;
 class Floor;
 
 enum CollideResult {
-    CanMoveUp = 0, CanMoveRigth, CanMoveDown, CanMoveLeft, GameOver, Victory, CannotMove, MobDie, CanMove
+    CanMoveUp = 0, CanMoveRigth, CanMoveDown, CanMoveLeft, GameOver, Victory, CannotMove, MobDie, CanMove, BonusUsed
 };
 
 class Actor {

@@ -9,17 +9,17 @@ BonusManaBox::BonusManaBox(int position_row, int position_col, char ident) {
 CollideResult BonusManaBox::Collide(Hero *_ci) {
     if (_ci->cur_mana_points_ + _ci->mana_damage_hero <= _ci->max_mana_points_) {
         _ci->cur_mana_points_ += _ci->mana_damage_hero;
-        return MobDie;
+        return BonusUsed;
     }
-    return CanMove;
+    return CannotMove;
 }
 
 CollideResult BonusManaBox::Collide(Dragon *_ci) {
-    return CanMove;
+    return CannotMove;
 }
 
 CollideResult BonusManaBox::Collide(Wall *_ci) {
-    return CanMove;
+    return CannotMove;
 }
 
 
@@ -28,15 +28,15 @@ CollideResult BonusManaBox::Collide(Actor *_ci) {
 }
 
 CollideResult BonusManaBox::Collide(Zombie *_ci) {
-    return CanMove;
+    return CannotMove;
 }
 
 CollideResult BonusManaBox::Collide(Princess *_ci) {
-    return CanMove;
+    return CannotMove;
 }
 
 CollideResult BonusManaBox::Collide(Floor *_ci) {
-    return CanMove;
+    return CannotMove;
 }
 
 CollideResult BonusManaBox::Collide(FireBall *_ci) {
